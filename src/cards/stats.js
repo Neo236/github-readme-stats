@@ -5,7 +5,8 @@ import { getCardColors } from "../common/color.js";
 import { CustomError } from "../common/error.js";
 import { kFormatter } from "../common/fmt.js";
 import { I18n } from "../common/I18n.js";
-import { icons, rankIcon } from "../common/icons.js";
+import { icons } from "../common/icons.js";
+import { FURSONA_B64 } from "../common/fursona.js";
 import { clampValue } from "../common/ops.js";
 import { flexLayout, measureText } from "../common/render.js";
 import { statCardLocales, wakatimeCardLocales } from "../translations.js";
@@ -116,46 +117,6 @@ const createTextNode = ({
 };
 
 /**
- * Calculates progress along the boundary of the circle, i.e. its circumference.
- *
- * @param {number} value The rank value to calculate progress for.
- * @returns {number} Progress value.
- */
-const calculateCircleProgress = (value) => {
-  const radius = 40;
-  const c = Math.PI * (radius * 2);
-
-  if (value < 0) {
-    value = 0;
-  }
-  if (value > 100) {
-    value = 100;
-  }
-
-  return ((100 - value) / 100) * c;
-};
-
-/**
- * Retrieves the animation to display progress along the circumference of circle
- * from the beginning to the given value in a clockwise direction.
- *
- * @param {{progress: number}} progress The progress value to animate to.
- * @returns {string} Progress animation css.
- */
-const getProgressAnimation = ({ progress }) => {
-  return `
-    @keyframes rankAnimation {
-      from {
-        stroke-dashoffset: ${calculateCircleProgress(0)};
-      }
-      to {
-        stroke-dashoffset: ${calculateCircleProgress(progress)};
-      }
-    }
-  `;
-};
-
-/**
  * Retrieves CSS styles for a card.
  *
  * @param {Object} colors The colors to use for the card.
@@ -164,7 +125,6 @@ const getProgressAnimation = ({ progress }) => {
  * @param {string} colors.iconColor The icon color.
  * @param {string} colors.ringColor The ring color.
  * @param {boolean} colors.show_icons Whether to show icons.
- * @param {number} colors.progress The progress value to animate to.
  * @returns {string} Card CSS styles.
  */
 const getStyles = ({
@@ -174,7 +134,6 @@ const getStyles = ({
   iconColor,
   ringColor,
   show_icons,
-  progress,
 }) => {
   return `
     .stat {
@@ -188,17 +147,6 @@ const getStyles = ({
       opacity: 0;
       animation: fadeInAnimation 0.3s ease-in-out forwards;
     }
-    .rank-text {
-      font: 800 24px 'Segoe UI', Ubuntu, Sans-Serif; fill: ${textColor};
-      animation: scaleInAnimation 0.3s ease-in-out forwards;
-    }
-    .rank-percentile-header {
-      font-size: 14px;
-    }
-    .rank-percentile-text {
-      font-size: 16px;
-    }
-    
     .not_bold { font-weight: 400 }
     .bold { font-weight: 700 }
     .icon {
@@ -209,21 +157,8 @@ const getStyles = ({
     .rank-circle-rim {
       stroke: ${ringColor};
       fill: none;
-      stroke-width: 6;
-      opacity: 0.2;
+      stroke-width: 4;
     }
-    .rank-circle {
-      stroke: ${ringColor};
-      stroke-dasharray: 250;
-      fill: none;
-      stroke-width: 6;
-      stroke-linecap: round;
-      opacity: 0.8;
-      transform-origin: -10px 8px;
-      transform: rotate(-90deg);
-      animation: rankAnimation 1s forwards ease-in-out;
-    }
-    ${process.env.NODE_ENV === "test" ? "" : getProgressAnimation({ progress })}
   `;
 };
 
@@ -449,15 +384,12 @@ const renderStatsCard = (stats, options = {}) => {
     hide_rank ? 0 : statItems.length ? 150 : 180,
   );
 
-  // the lower the user's percentile the better
-  const progress = 100 - rank.percentile;
   const cssStyles = getStyles({
     titleColor,
     ringColor,
     textColor,
     iconColor,
     show_icons,
-    progress,
   });
 
   const calculateTextWidth = () => {
@@ -550,18 +482,25 @@ const renderStatsCard = (stats, options = {}) => {
     }
   };
 
-  // Conditionally rendered elements
+  // Conditionally rendered elements.
+  // El circulo de rango se reemplaza por la fursona: GIF recortado en circulo
+  // con un aro fijo del color del ring del theme.
   const rankCircle = hide_rank
     ? ""
     : `<g data-testid="rank-circle"
           transform="translate(${calculateRankXTranslation()}, ${
             height / 2 - 50
           })">
-        <circle class="rank-circle-rim" cx="-10" cy="8" r="40" />
-        <circle class="rank-circle" cx="-10" cy="8" r="40" />
-        <g class="rank-text">
-          ${rankIcon(rank_icon, rank?.level, rank?.percentile)}
-        </g>
+        <defs>
+          <clipPath id="fursona-clip">
+            <circle cx="-10" cy="8" r="40" />
+          </clipPath>
+        </defs>
+        <circle class="rank-circle-rim" cx="-10" cy="8" r="46" />
+        <image href="data:image/gif;base64,${FURSONA_B64}"
+               x="-50" y="-32" width="80" height="80"
+               preserveAspectRatio="xMidYMid slice"
+               clip-path="url(#fursona-clip)" />
       </g>`;
 
   // Accessibility Labels

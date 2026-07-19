@@ -462,6 +462,20 @@ export const themes = {
     icon_color: "ffffff",
     bg_color: "35,4158d0,c850c0,ffcc70",
   },
+  aguara: {
+    title_color: "e8722e",
+    icon_color: "d9a441",
+    text_color: "efe6d8",
+    bg_color: "15100c",
+    border_color: "3a2a1e",
+  },
+  aguara_light: {
+    title_color: "bc531d",
+    icon_color: "a17c24",
+    text_color: "33261c",
+    bg_color: "f7f0e3",
+    border_color: "e0d3bc",
+  },
 };
 
 export default themes;
