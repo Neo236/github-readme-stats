@@ -493,12 +493,12 @@ const renderStatsCard = (stats, options = {}) => {
           })">
         <defs>
           <clipPath id="fursona-clip">
-            <circle cx="-10" cy="8" r="40" />
+            <circle cx="-10" cy="8" r="48" />
           </clipPath>
         </defs>
-        <circle class="rank-circle-rim" cx="-10" cy="8" r="46" />
+        <circle class="rank-circle-rim" cx="-10" cy="8" r="54" />
         <image href="data:image/gif;base64,${FURSONA_B64}"
-               x="-50" y="-32" width="80" height="80"
+               x="-58" y="-40" width="96" height="96"
                preserveAspectRatio="xMidYMid slice"
                clip-path="url(#fursona-clip)" />
       </g>`;
