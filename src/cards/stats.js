@@ -13,7 +13,7 @@ import { statCardLocales, wakatimeCardLocales } from "../translations.js";
 
 const CARD_MIN_WIDTH = 287;
 const CARD_DEFAULT_WIDTH = 287;
-const RANK_CARD_MIN_WIDTH = 420;
+const RANK_CARD_MIN_WIDTH = 363;
 const RANK_CARD_DEFAULT_WIDTH = 450;
 const RANK_ONLY_CARD_MIN_WIDTH = 290;
 const RANK_ONLY_CARD_DEFAULT_WIDTH = 290;
@@ -29,7 +29,6 @@ const LONG_LOCALES = [
   "cs",
   "de",
   "el",
-  "es",
   "fil",
   "fi",
   "fr",
@@ -108,7 +107,7 @@ const createTextNode = ({
       }" ${labelOffset} y="12.5">${label}:</text>
       <text
         class="stat ${bold ? " bold" : "not_bold"}"
-        x="${(showIcons ? 140 : 120) + shiftValuePos}"
+        x="${(showIcons ? 120 : 110) + shiftValuePos}"
         y="12.5"
         data-testid="${id}"
       >${kValue}${unitSymbol ? ` ${unitSymbol}` : ""}</text>
@@ -470,7 +469,7 @@ const renderStatsCard = (stats, options = {}) => {
    */
   const calculateRankXTranslation = () => {
     if (statItems.length) {
-      const minXTranslation = RANK_CARD_MIN_WIDTH + iconWidth - 70;
+      const minXTranslation = RANK_CARD_MIN_WIDTH + iconWidth - 50;
       if (width > RANK_CARD_DEFAULT_WIDTH) {
         const xMaxExpansion = minXTranslation + (450 - minCardWidth) / 2;
         return xMaxExpansion + width - RANK_CARD_DEFAULT_WIDTH;
@@ -493,12 +492,12 @@ const renderStatsCard = (stats, options = {}) => {
           })">
         <defs>
           <clipPath id="fursona-clip">
-            <circle cx="-10" cy="8" r="48" />
+            <circle cx="-10" cy="8" r="42" />
           </clipPath>
         </defs>
-        <circle class="rank-circle-rim" cx="-10" cy="8" r="54" />
+        <circle class="rank-circle-rim" cx="-10" cy="8" r="48" />
         <image href="data:image/gif;base64,${FURSONA_B64}"
-               x="-58" y="-40" width="96" height="96"
+               x="-52" y="-34" width="84" height="84"
                preserveAspectRatio="xMidYMid slice"
                clip-path="url(#fursona-clip)" />
       </g>`;

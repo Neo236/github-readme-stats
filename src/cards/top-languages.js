@@ -784,6 +784,7 @@ const renderTopLanguages = (topLangs, options = {}) => {
     hide_title = false,
     hide_border = false,
     card_width,
+    card_height,
     title_color,
     text_color,
     bg_color,
@@ -874,6 +875,11 @@ const renderTopLanguages = (topLangs, options = {}) => {
       totalLanguageSize,
       stats_format,
     );
+  }
+
+  // Permite forzar un alto minimo exacto (para igualar las cards del perfil)
+  if (card_height && !isNaN(card_height)) {
+    height = Math.max(height, card_height);
   }
 
   const card = new Card({
